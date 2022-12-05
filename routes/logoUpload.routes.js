@@ -30,7 +30,7 @@ router.post("/", upload.single("upload"), async (req, res) => {
       res.json({
         uploaded: true,
 
-        url: `${API_URL}/${photo.originalname}`,
+        url: `${API_URL}/logo.PNG`,
       });
     } else {
       fs.unlinkSync(photo.path);
