@@ -1,0 +1,2332 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "hezarfenbook",
+    "description": " 'hezarfenbook'  web servis dökümatasyonu ve test ortamıdır. ",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Kullanıcı kaydetme, listeleme, silme ve güncelleme login ve logout işlemleri için oluşturulan servisleri içerir."
+    },
+    {
+      "name": "Authors",
+      "description": "Yazar kaydetme,listeleme, silme ve güncelleme işlemleri için oluşturulan servisleri içerir."
+    },
+    {
+      "name": "Publishers",
+      "description": "Yayınevi kaydetme, listeleme, silme ve güncelleme işlemleri için oluşturulan servisleri içerir."
+    },
+    {
+      "name": "Books",
+      "description": "Kitap kaydetme, listeleme, silme ve güncelleme işlemleri için oluşturulan servisleri içerir."
+    }
+  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Yeni kullanıcının kaydolması için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "firstName",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "lastName",
+            "type": "string",
+            "description": "Soy İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "email",
+            "type": "string",
+            "description": "Email Adresi",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "password",
+            "type": "string",
+            "description": "Şifre",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "501": {
+            "description": "Kullanıcı zaten mevcut!"
+          },
+
+          "502": {
+            "description": "Geçersiz kullanıcı bilgileri... !!"
+          }
+        }
+      }
+    },
+
+    "/users/login": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Sisteme giriş yapılan bilgileri veritabanındaki kullanıcı bilgileri ile karşılaştırıp doğrular ve token üretir. ",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "email",
+            "type": "string",
+            "description": "Email Adresi",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "password",
+            "type": "string",
+            "description": "Şifre",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/UserLogin"
+            }
+          },
+
+          "500": {
+            "description": "Lütfen Tüm Alanları Doldurun!"
+          },
+          "501": {
+            "description": "Hesabınız Askıya Alımıştır!"
+          },
+          "502": {
+            "description": "Hatalı Şifre!"
+          },
+          "503": {
+            "description": "Geçersiz Email Adresi"
+          }
+        }
+      }
+    },
+
+    "/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Yöneticinin kayıtlı tüm kulanıcıları getirebilmesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "401": {
+            "description": "Token Yok...Yetkili Değilsiniz Lütfen Giriş Yapınız..."
+          },
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Yöneticinin kullanıcı kaydetmesi için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "firstName",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "lastName",
+            "type": "string",
+            "description": "Soy İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "email",
+            "type": "string",
+            "description": "Email Adresi",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "password",
+            "type": "string",
+            "description": "Şifre",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "approvedAccount",
+            "type": "boolean",
+            "description": "Onaylı Hesap mı ?",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "isActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "isAdmin",
+            "type": "boolean",
+            "description": "Yönetici mi ?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "501": {
+            "description": "Kullanıcı zaten mevcut!"
+          },
+
+          "502": {
+            "description": "Geçersiz kullanıcı bilgileri... !!"
+          }
+        }
+      }
+    },
+
+    "/users/{userId}": {
+      "put": {
+        "tags": ["Users"],
+        "summary": "Yöneticinin kullanıcı güncelmesi için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "type": "string",
+            "description": "Güncellenecek Kullanıcı Id'si",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "firstName",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "lastName",
+            "type": "string",
+            "description": "Soy İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "isAdmin",
+            "type": "boolean",
+            "description": "is Admin?",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "isActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "approvedAccount",
+            "type": "boolean",
+            "description": "Onaylı Hesap mı ?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "501": {
+            "description": "Kullanıcı zaten mevcut!"
+          },
+
+          "502": {
+            "description": "Geçersiz kullanıcı bilgileri... !!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Yöneticinin kullanıcı silmesi için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "type": "string",
+            "description": "Silinecek kullanıcı Id'si",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "500": {
+            "description": "Lütfen kullanıcı Id'sini girin!"
+          },
+          "501": {
+            "description": "Böyle bir kullanıcı bulunamadı!"
+          }
+        }
+      }
+    },
+
+    "/authors": {
+      "get": {
+        "tags": ["Authors"],
+        "summary": "Yöneticinin kayıtlı yazarları listelemesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Authors"],
+        "summary": "Yeni yazar eklemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Surname",
+            "type": "string",
+            "description": "Soy İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Author"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz yazar bilgileri... !!"
+          }
+        }
+      }
+    },
+
+    "/authors/{authorId}": {
+      "put": {
+        "tags": ["Authors"],
+        "summary": "Yazar bilgilerini güncellemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "authorId",
+            "type": "string",
+            "description": "Güncellenecek yazarın Id'si",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Surname",
+            "type": "string",
+            "description": "Soy İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Author"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz yazar bilgileri... !!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Authors"],
+        "summary": "Yazar bilgilerini güncellemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "authorId",
+            "type": "string",
+            "description": "Silinecek yazarın Id'si",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Author"
+            }
+          },
+          "500": {
+            "description": "Lütfen yazar Id'sini girin!"
+          },
+          "501": {
+            "description": "Böyle bir yazar bulunamadı!"
+          }
+        }
+      }
+    },
+
+    "/publishers": {
+      "get": {
+        "tags": ["Publishers"],
+        "summary": "Yöneticinin kayıtlı tüm yayınevlerini listelemesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Publishers"],
+        "summary": "Yeni yayınevi kaydetmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Address",
+            "type": "string",
+            "description": "Adres",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Publisher"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz yayınevi bilgileri... !!"
+          }
+        }
+      }
+    },
+
+    "/publishers/{publisherId}": {
+      "put": {
+        "tags": ["Publishers"],
+        "summary": "Mevcut yayınevini güncellemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisherId",
+            "type": "string",
+            "description": "Güncellenecek yayınevinin Id'si",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "Address",
+            "type": "string",
+            "description": "Adres",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Publisher"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz yayınevi bilgileri... !!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Publishers"],
+        "summary": " Yayınevi silmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisherId",
+            "type": "string",
+            "description": "Silinecek yayınevinin Id'si",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Publisher"
+            }
+          },
+          "500": {
+            "description": "Lütfen yayınevi Id'sini girin!"
+          },
+          "501": {
+            "description": "Böyle bir yayınevi bulunamadı!"
+          }
+        }
+      }
+    },
+
+    "/books": {
+      "get": {
+        "tags": ["Books"],
+        "summary": "Yöneticinin kayıtlı tüm kitapları listelemesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Books"],
+        "summary": "Yeni kitap kaydetmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "Title",
+            "type": "string",
+            "description": "Kitap Adı",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "BookTypeId",
+            "type": "number",
+            "description": "Kitap Tipi",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "ISBN",
+            "type": "number",
+            "description": "ISBN No",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "EditonInfo",
+            "type": "string",
+            "description": "Baskı Bilgisi",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "EditonNumber",
+            "type": "number",
+            "description": "Baskı No",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "AuthorId",
+            "type": "string",
+            "description": "Yazar Id",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "PublisherId",
+            "type": "string",
+            "description": "Yayınevi Id",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": false
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "500": {
+            "description": "Lütfen kitap adını girin!"
+          },
+
+          "502": {
+            "description": "Geçersiz kitap bilgileri... !!"
+          }
+        }
+      }
+    },
+
+    "/books/{bookId}": {
+      "put": {
+        "tags": ["Books"],
+        "summary": "Mevcut kitabı güncellemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "bookId",
+            "type": "string",
+            "description": "Güncellenecek kitabın Id'si",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "Title",
+            "type": "string",
+            "description": "Kitap Adı",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "BookTypeId",
+            "type": "number",
+            "description": "Kitap Tipi",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "ISBN",
+            "type": "number",
+            "description": "ISBN No",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "EditonInfo",
+            "type": "string",
+            "description": "Baskı Bilgisi",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "EditonNumber",
+            "type": "number",
+            "description": "Baskı No",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "AuthorId",
+            "type": "string",
+            "description": "Yazar Id",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "PublisherId",
+            "type": "string",
+            "description": "Yayınevi Id",
+            "required": false
+          },
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": false
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "500": {
+            "description": "Lütfen kitap adını girin!"
+          },
+
+          "502": {
+            "description": "Geçersiz kitap bilgileri... !!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Books"],
+        "summary": "Yeni kitap kaydetmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "bookId",
+            "type": "string",
+            "description": "Kitap Adı",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Book"
+            }
+          },
+          "500": {
+            "description": "Lütfen kitap Id'sini girin!"
+          },
+          "501": {
+            "description": "Böyle bir kitap bulunamadı!"
+          }
+        }
+      }
+    },
+
+    "/bookTypes": {
+      "get": {
+        "tags": ["BookTypes"],
+        "summary": "Yöneticinin kayıtlı tüm kitap türlerini listelemesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      },
+      "post": {
+        "tags": ["BookTypes"],
+        "summary": "Yeni kitap türü kaydetmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BookType"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz yayınevi bilgileri... !!"
+          }
+        }
+      }
+    },
+
+    "/bookTypes/{bookTypeId}": {
+      "put": {
+        "tags": ["BookTypes"],
+        "summary": "Mevcut kitap türünü güncellemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "bookTypeId",
+            "type": "string",
+            "description": "Güncellenecek kitap türü Id'si",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BookType"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz kitap türü bilgileri... !!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["BookTypes"],
+        "summary": " Kitap türü silmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "bookTypeId",
+            "type": "string",
+            "description": "Silinecek kitap türü Id'si",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BookType"
+            }
+          },
+          "500": {
+            "description": "Lütfen kitap türü Id'sini girin!"
+          },
+          "501": {
+            "description": "Böyle bir kitap türü bulunamadı!"
+          }
+        }
+      }
+    },
+
+    "/events": {
+      "get": {
+        "tags": ["Events"],
+        "summary": "Yöneticinin kayıtlı olayları listelemesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Events"],
+        "summary": "Yeni olay kaydetmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz olay bilgileri... !!"
+          }
+        }
+      }
+    },
+
+    "/events/{eventId}": {
+      "put": {
+        "tags": ["Events"],
+        "summary": "Mevcut olayı güncellemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "eventId",
+            "type": "string",
+            "description": "Güncellenecek olay Id'si",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz kişi bilgileri... !!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Events"],
+        "summary": " Olay silmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "eventId",
+            "type": "string",
+            "description": "Silinecek olay Id'si",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Event"
+            }
+          },
+          "500": {
+            "description": "Lütfen olay Id'sini girin!"
+          },
+          "501": {
+            "description": "Böyle bir olay bulunamadı!"
+          }
+        }
+      }
+    },
+
+    "/locations": {
+      "get": {
+        "tags": ["Locations"],
+        "summary": "Yöneticinin kayıtlı yerleri listelemesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Locations"],
+        "summary": "Yeni yer kaydetmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Location"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz yer bilgileri... !!"
+          }
+        }
+      }
+    },
+
+    "/locations/{locationId}": {
+      "put": {
+        "tags": ["Locations"],
+        "summary": "Mevcut yeri güncellemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "locationId",
+            "type": "string",
+            "description": "Güncellenecek yer Id'si",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Location"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz yer bilgileri... !!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Locations"],
+        "summary": " Yer silmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "locationId",
+            "type": "string",
+            "description": "Silinecek yer Id'si",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Location"
+            }
+          },
+          "500": {
+            "description": "Lütfen yer Id'sini girin!"
+          },
+          "501": {
+            "description": "Böyle bir yer bulunamadı!"
+          }
+        }
+      }
+    },
+
+    "/persons": {
+      "get": {
+        "tags": ["Persons"],
+        "summary": "Yöneticinin kayıtlı kişileri listelemesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Persons"],
+        "summary": "Yeni kişi kaydetmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Person"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz kişi bilgileri... !!"
+          }
+        }
+      }
+    },
+
+    "/persons/{personId}": {
+      "put": {
+        "tags": ["Persons"],
+        "summary": "Mevcut kişiyi güncellemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "personId",
+            "type": "string",
+            "description": "Güncellenecek kişi Id'si",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Person"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz kişi bilgileri... !!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Persons"],
+        "summary": " Kişi silmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "personId",
+            "type": "string",
+            "description": "Silinecek kişi Id'si",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Person"
+            }
+          },
+          "500": {
+            "description": "Lütfen kişi Id'sini girin!"
+          },
+          "501": {
+            "description": "Böyle bir kişi bulunamadı!"
+          }
+        }
+      }
+    },
+
+    "/subjects": {
+      "get": {
+        "tags": ["Subjects"],
+        "summary": "Yöneticinin kayıtlı konuları listelemesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Subjects"],
+        "summary": "Yeni konu kaydetmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subject"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz konu bilgileri... !!"
+          }
+        }
+      }
+    },
+
+    "/subjects/{subjectId}": {
+      "put": {
+        "tags": ["Subjects"],
+        "summary": "Mevcut konuyu güncellemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectId",
+            "type": "string",
+            "description": "Güncellenecek konu Id'si",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subject"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz konu bilgileri... !!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Subjects"],
+        "summary": " Konu silmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectId",
+            "type": "string",
+            "description": "Silinecek yer Id'si",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subject"
+            }
+          },
+          "500": {
+            "description": "Lütfen konu Id'sini girin!"
+          },
+          "501": {
+            "description": "Böyle bir konu bulunamadı!"
+          }
+        }
+      }
+    },
+
+    "/times": {
+      "get": {
+        "tags": ["Times"],
+        "summary": "Yöneticinin kayıtlı tarihleri listelemesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Times"],
+        "summary": "Yeni tarih kaydetmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Time"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz tarih bilgileri... !!"
+          }
+        }
+      }
+    },
+
+    "/times/{timeId}": {
+      "put": {
+        "tags": ["Times"],
+        "summary": "Mevcut tarihi güncellemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "timeId",
+            "type": "string",
+            "description": "Güncellenecek tarih Id'si",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Name",
+            "type": "string",
+            "description": "İsim",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "boolean",
+            "description": "Aktif mi?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Time"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz tarih bilgileri... !!"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Times"],
+        "summary": " Tarih silmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "timeId",
+            "type": "string",
+            "description": "Silinecek tarih Id'si",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Time"
+            }
+          },
+          "500": {
+            "description": "Lütfen tarih Id'sini girin!"
+          },
+          "501": {
+            "description": "Böyle bir tarih bulunamadı!"
+          }
+        }
+      }
+    },
+
+    "/classifications": {
+      "get": {
+        "tags": ["Classifications"],
+        "summary": "Yöneticinin kayıtlı tasnifleri listelemesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Classifications"],
+        "summary": "Yeni tasnif kaydetmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "BookId",
+            "type": "string",
+            "description": "Kitap Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "PageNo",
+            "type": "string",
+            "description": "Sayfa No",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Text",
+            "type": "string",
+            "description": "Text",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "EventId",
+            "type": "string",
+            "description": "Event Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "SubjectId",
+            "type": "string",
+            "description": "Subject Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "PersonId",
+            "type": "string",
+            "description": "Kişi Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "LocationId",
+            "type": "string",
+            "description": "Yer Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "TimeId",
+            "type": "string",
+            "description": "Zaman Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "string",
+            "description": "Aktif mi ?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Classification"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz tasnif bilgileri... !!"
+          }
+        }
+      }
+    },
+    "/classifications/{bookId}": {
+      "get": {
+        "tags": ["Classifications"],
+        "summary": "Yöneticinin belirli bir kitabın tasniflerini listelemesi için oluşturulan servistir",
+
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+
+          "500": {
+            "description": "Yetkili Değilsiniz...Sadece yönetici bu işlemi gerçekleştirebilir!"
+          }
+        }
+      }
+    },
+
+    "/classification/{classsificationId}": {
+      "put": {
+        "tags": ["Classifications"],
+        "summary": "Mevcut tasnifi güncellemek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "BookId",
+            "type": "string",
+            "description": "Kitap Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "PageNo",
+            "type": "string",
+            "description": "Sayfa No",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "Text",
+            "type": "string",
+            "description": "Text",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "EventId",
+            "type": "string",
+            "description": "Event Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "SubjectId",
+            "type": "string",
+            "description": "Subject Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "PersonId",
+            "type": "string",
+            "description": "Kişi Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "LocationId",
+            "type": "string",
+            "description": "Yer Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "TimeId",
+            "type": "string",
+            "description": "Zaman Id",
+            "required": true
+          },
+
+          {
+            "in": "formData",
+            "name": "IsActive",
+            "type": "string",
+            "description": "Aktif mi ?",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Classification"
+            }
+          },
+          "500": {
+            "description": "Lütfen tüm alanları doldurun!"
+          },
+
+          "502": {
+            "description": "Geçersiz tasnif bilgileri... !!"
+          }
+        }
+      }
+    },
+    "/classifications/{bookId}/{classificationId}": {
+      "delete": {
+        "tags": ["Classifications"],
+        "summary": " Tasnif silmek için gerekli olan servistir.",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "bookId",
+            "type": "string",
+            "description": "Tasnifi silinecek kitap Id'si",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "classificationId",
+            "type": "string",
+            "description": "Silinecek tasnif Id'si",
+            "required": true
+          }
+        ],
+
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Classification"
+            }
+          },
+          "500": {
+            "description": "Lütfen tasnif Id'sini girin!"
+          },
+          "501": {
+            "description": "Böyle bir tasnif bulunamadı!"
+          }
+        }
+      }
+    }
+  },
+
+  "definitions": {
+    "Classification": {
+      "type": "object",
+      "properties": {
+        "BookId": {
+          "type": "string"
+        },
+        "PageNo": {
+          "type": "string"
+        },
+        "Text": {
+          "type": "string"
+        },
+        "EventId": {
+          "type": "string"
+        },
+        "SubjectId": {
+          "type": "boolean"
+        },
+        "PersonId": {
+          "type": "boolean"
+        },
+        "LocationId": {
+          "type": "boolean"
+        },
+        "TimeId": {
+          "type": "string"
+        },
+        "IsActive": {
+          "type": "boolean"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "isAdmin": {
+          "type": "boolean"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "approvedAccount": {
+          "type": "boolean"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    },
+    "Author": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Surname": {
+          "type": "string"
+        },
+
+        "IsActive": {
+          "type": "boolean"
+        },
+        "IsDelete": {
+          "type": "boolean"
+        },
+        "CreatedUser": {
+          "type": "string"
+        },
+        "UpdatedUser": {
+          "type": "string"
+        },
+
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    },
+
+    "Publisher": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+        "Address": {
+          "type": "string"
+        },
+
+        "IsActive": {
+          "type": "boolean"
+        },
+        "IsDelete": {
+          "type": "boolean"
+        },
+        "CreatedUser": {
+          "type": "string"
+        },
+        "UpdatedUser": {
+          "type": "string"
+        },
+
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    },
+
+    "Book": {
+      "type": "object",
+      "properties": {
+        "Title": {
+          "type": "string"
+        },
+        "BookTypeId": {
+          "type": "number"
+        },
+        "ISBN": {
+          "type": "number"
+        },
+        "EditonInfo": {
+          "type": "string"
+        },
+        "EditonNumber": {
+          "type": "number"
+        },
+        "EditonYear": {
+          "type": "number"
+        },
+        "AuthorId": {
+          "type": "string"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "PublisherId": {
+          "type": "string"
+        },
+        "IsActive": {
+          "type": "boolean"
+        },
+        "IsDelete": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+
+        "CreatedUserId": {
+          "type": "string"
+        },
+        "UpdatedUserId": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    },
+
+    "UserLogin": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "loginType": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "BookType": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+
+        "IsActive": {
+          "type": "boolean"
+        },
+        "IsDelete": {
+          "type": "boolean"
+        },
+        "CreatedUser": {
+          "type": "string"
+        },
+        "UpdatedUser": {
+          "type": "string"
+        },
+
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+
+        "IsActive": {
+          "type": "boolean"
+        },
+        "IsDelete": {
+          "type": "boolean"
+        },
+        "CreatedUser": {
+          "type": "string"
+        },
+        "UpdatedUser": {
+          "type": "string"
+        },
+
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    },
+    "Location": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+
+        "IsActive": {
+          "type": "boolean"
+        },
+        "IsDelete": {
+          "type": "boolean"
+        },
+        "CreatedUser": {
+          "type": "string"
+        },
+        "UpdatedUser": {
+          "type": "string"
+        },
+
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    },
+    "Person": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+
+        "IsActive": {
+          "type": "boolean"
+        },
+        "IsDelete": {
+          "type": "boolean"
+        },
+        "CreatedUser": {
+          "type": "string"
+        },
+        "UpdatedUser": {
+          "type": "string"
+        },
+
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    },
+    "Subject": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+
+        "IsActive": {
+          "type": "boolean"
+        },
+        "IsDelete": {
+          "type": "boolean"
+        },
+        "CreatedUser": {
+          "type": "string"
+        },
+        "UpdatedUser": {
+          "type": "string"
+        },
+
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    },
+    "Time": {
+      "type": "object",
+      "properties": {
+        "Name": {
+          "type": "string"
+        },
+
+        "IsActive": {
+          "type": "boolean"
+        },
+        "IsDelete": {
+          "type": "boolean"
+        },
+        "CreatedUser": {
+          "type": "string"
+        },
+        "UpdatedUser": {
+          "type": "string"
+        },
+
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "__v": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "name": "Authorization",
+      "in": "header",
+      "type": "apiKey",
+      "description": "JWT Authorization header"
+    }
+  },
+  "security": [{ "bearerAuth": [] }]
+}
